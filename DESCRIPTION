@@ -1,0 +1,12 @@
+Package: FileViews
+Title: Views across multiple files 
+Description:  Create common views to query across multiple files 
+Version: 0.99.0
+Author: The Bioconductor Dev Team
+Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
+biocViews: Infrastructure
+Depends: methods, BiocGenerics, BiocParallel, 
+         XVector, IRanges, GenomicRanges
+Imports: Rsamtools 
+Suggests: RUnit
+License: Artistic-2.0

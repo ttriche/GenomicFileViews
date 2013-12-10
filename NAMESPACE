@@ -1,0 +1,43 @@
+import(methods)
+import(BiocGenerics)
+import(XVector)
+import(IRanges)
+import(BiocParallel)
+import(GenomicRanges)
+
+## Rsamtools
+importClassesFrom(Rsamtools, ScanBamParam)
+importFrom(Rsamtools, 
+    scanBamHeader, scanBamWhat, bamWhich, "bamWhich<-")
+importMethodsFrom(Rsamtools, 
+    ScanBamParam, scanBam, countBam, scanFa, countFa, 
+    yieldSize, "yieldSize<-", scanFaIndex)
+
+export(
+    ## from R/FileViews:
+    filePaths, fileIndices,
+    fileSamples, "fileSamples<-", fileRanges, "fileRanges<-",
+    fileExperiment, "fileDirname<-"
+
+    ## from R/BamFileViews:
+    ## from R/FaFileViews:
+    ## from R/TabixFileViews:
+    ## from R/VCFFileViews:
+    ## from R/BigWigFileViews:
+)
+
+exportClasses(
+    FileViews, BamFileViews, FaFileViews, TabixFileViews, VCFFileViews
+)
+
+exportMethods(
+    ## from R/FileViews:
+    "[", length, show,
+
+    ## from R/BamFileViews:
+    BamFileViews, scanBam, countBam, 
+
+    ## from R/FaFileFiews:
+    FaFileViews, scanFa, countFa
+)
+
