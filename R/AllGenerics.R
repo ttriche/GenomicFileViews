@@ -1,4 +1,4 @@
-setGeneric("BamFileViews",
+setGeneric("BamGFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -7,10 +7,10 @@ setGeneric("BamFileViews",
                     fileExperiment=list(), 
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("BamFileViews"),
+           standardGeneric("BamGFileViews"),
            signature="fileRanges")
 
-setGeneric("FaFileViews",
+setGeneric("FaGFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -19,10 +19,10 @@ setGeneric("FaFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("FaFileViews"),
+           standardGeneric("FaGFileViews"),
            signature="fileRanges")
 
-setGeneric("TabixFileViews",
+setGeneric("TabixGFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -31,10 +31,10 @@ setGeneric("TabixFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("TabixFileViews"),
+           standardGeneric("TabixGFileViews"),
            signature="fileRanges")
 
-setGeneric("VCFFileViews",
+setGeneric("VCFGFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -43,5 +43,5 @@ setGeneric("VCFFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("VCFFileViews"),
+           standardGeneric("VCFGFileViews"),
            signature="fileRanges")

@@ -1,4 +1,4 @@
-FileViews
+GFileViews
 =========
 
-Views across multiple files
+Query genomic views across multiple files

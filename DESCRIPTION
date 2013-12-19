@@ -1,7 +1,7 @@
-Package: FileViews
-Title: Views across multiple files 
-Description:  Create common views to query across multiple files 
-Version: 0.99.0
+Package: GFileViews
+Title: Genomic file views 
+Description:  Query genomic views across multiple files 
+Version: 0.99.1
 Author: The Bioconductor Dev Team
 Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
 biocViews: Infrastructure

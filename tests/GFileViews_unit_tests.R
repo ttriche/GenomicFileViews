@@ -1,2 +1,2 @@
-require("FileViews") || stop("unable to load FileViews package")
-FileViews:::.test()
+require("GFileViews") || stop("unable to load GFileViews package")
+GFileViews:::.test()

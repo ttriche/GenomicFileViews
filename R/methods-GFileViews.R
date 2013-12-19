@@ -1,12 +1,12 @@
 ### =========================================================================
-### FileViews (VIRTUAL) 
+### GFileViews (VIRTUAL) 
 ### =========================================================================
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Validity. 
 ###
 
-setMethod(.validity, "FileViews", 
+setMethod(.validity, "GFileViews", 
     function(object) {
         msg <- NULL
         if (length(fileIndices(object)) != length(filePaths(object)))
@@ -51,37 +51,37 @@ fileRanges <-
 fileExperiment <-
     function(x) slot(x, "fileExperiment")
 
-setMethod(yieldSize, "FileViews",
+setMethod(yieldSize, "GFileViews",
     function(object, ...) slot(object, "yieldSize"))
 
-setReplaceMethod("yieldSize", "FileViews",
+setReplaceMethod("yieldSize", "GFileViews",
     function(object, ..., value) {
         slot(object, "yieldSize") <- value
         object 
     }
 )
 
-setMethod(dim, "FileViews", 
+setMethod(dim, "GFileViews", 
     function(x) c(length(fileRanges(x)), length(filePaths(x)))
 )
 
-setMethod(names, "FileViews", 
+setMethod(names, "GFileViews", 
     function(x) rownames(fileSamples(x))
 )
 
-setReplaceMethod("names", "FileViews", 
+setReplaceMethod("names", "GFileViews", 
     function(x, value) { 
         rownames(fileSamples(x)) <- value
         x
     }
 )
 
-setMethod(dimnames, "FileViews", 
+setMethod(dimnames, "GFileViews", 
     function(x) 
         list(names(fileRanges(x)), rownames(fileSamples(x)))
 )
 
-setReplaceMethod("dimnames", "FileViews", 
+setReplaceMethod("dimnames", "GFileViews", 
     function(x, value) {
         names(fileRanges(x)) <- value[[1]]
         rownames(fileSamples(x)) <- value[[2]]
@@ -93,12 +93,12 @@ setReplaceMethod("dimnames", "FileViews",
 ### Subsetting.
 ###
 
-setMethod("[", c("FileViews", "ANY", "missing"),
+setMethod("[", c("GFileViews", "ANY", "missing"),
     function(x, i, j, ..., drop=TRUE)
         initialize(x, fileRanges=fileRanges(x)[i,])
 )
 
-setMethod("[", c("FileViews", "missing", "ANY"),
+setMethod("[", c("GFileViews", "missing", "ANY"),
     function(x, i, j, ..., drop=TRUE)
     {
         if (is.character(j))
@@ -111,7 +111,7 @@ setMethod("[", c("FileViews", "missing", "ANY"),
     }
 )
 
-setMethod("[", c("FileViews", "ANY", "ANY"),
+setMethod("[", c("GFileViews", "ANY", "ANY"),
     function(x, i, j, ..., drop=TRUE)
     {
         if (is.character(i))
@@ -129,20 +129,15 @@ setMethod("[", c("FileViews", "ANY", "ANY"),
     }
 )
 
-setMethod("length", "FileViews",
-    function(x) length(filePaths(x))
-)
-        
-
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Split and Delegate.
 ###
 
-.FileViews_which <- function(file, param, missing)
+.GFileViews_which <- function(file, param, missing)
 {
     grange <- fileRanges(file)
     which <- split(ranges(grange), seqnames(grange))
-    if (is(file, "BamFileViews")) { 
+    if (is(file, "BamGFileViews")) { 
         if (!missing && !identical(which, bamWhich(param)))
             warning("'fileRanges(file)' and 'bamWhich(param)' differ; ",
                     "using fileRanges(file)")
@@ -150,7 +145,7 @@ setMethod("length", "FileViews",
     which
 }
 
-.FileViews_delegate <-
+.GFileViews_delegate <-
     function(what, fileViews, fun, ...)
 {
     result <- bplapply(fileViews, fun, ...)
@@ -168,7 +163,7 @@ setMethod("length", "FileViews",
 ### Show.
 ###
 
-setMethod(show, "FileViews", 
+setMethod(show, "GFileViews", 
     function(object) 
     {
         cat(class(object), "dim:",

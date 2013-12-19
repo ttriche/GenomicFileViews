@@ -14,30 +14,25 @@ importMethodsFrom(Rsamtools,
     yieldSize, "yieldSize<-", scanFaIndex)
 
 export(
-    ## from R/FileViews:
+    ## from R/GFileViews:
     filePaths, fileIndices,
     fileSamples, "fileSamples<-", fileRanges, "fileRanges<-",
     fileExperiment, "fileDirname<-"
 
-    ## from R/BamFileViews:
-    ## from R/FaFileViews:
-    ## from R/TabixFileViews:
-    ## from R/VCFFileViews:
-    ## from R/BigWigFileViews:
 )
 
 exportClasses(
-    FileViews, BamFileViews, FaFileViews, TabixFileViews, VCFFileViews
+    GFileViews, BamGFileViews, FaGFileViews, TabixGFileViews, VcfGFileViews
 )
 
 exportMethods(
-    ## from R/FileViews:
-    "[", length, show,
+    ## from R/GFileViews:
+    "[", dim, names, show,
 
-    ## from R/BamFileViews:
-    BamFileViews, scanBam, countBam, 
+    ## from R/BamGFileViews:
+    BamGFileViews, scanBam, countBam, 
 
-    ## from R/FaFileFiews:
-    FaFileViews, scanFa, countFa
+    ## from R/FaGFileFiews:
+    FaGFileViews, scanFa, countFa
 )
 

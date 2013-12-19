@@ -1,8 +1,8 @@
-\name{FileViews}
+\name{GFileViews}
 \Rdversion{1.1}
 \docType{class}
-\alias{FileViews-class}
-\alias{FileViews}
+\alias{GFileViews-class}
+\alias{GFileViews}
 % accessors
 \alias{filePaths}
 \alias{fileIndices}
@@ -13,24 +13,24 @@
 \alias{fileSamples<-}
 \alias{fileRanges<-}
 % methods
-\alias{names,FileViews-method}
-\alias{names<-,FileViews-method}
-\alias{dim,FileViews-method}
-\alias{dimnames,FileViews-method}
-\alias{dimnames<-,FileViews,ANY-method}
-\alias{[,FileViews,ANY,missing-method}
-\alias{[,FileViews,missing,ANY-method}
-\alias{[,FileViews,ANY,ANY-method}
-\alias{[,FileViews,ANY,missing-method}
-\alias{yieldSize,FileViews-method}
-\alias{length,FileViews-method}
-\alias{show,FileViews-method}
+\alias{names,GFileViews-method}
+\alias{names<-,GFileViews-method}
+\alias{dim,GFileViews-method}
+\alias{dimnames,GFileViews-method}
+\alias{dimnames<-,GFileViews,ANY-method}
+\alias{[,GFileViews,ANY,missing-method}
+\alias{[,GFileViews,missing,ANY-method}
+\alias{[,GFileViews,ANY,ANY-method}
+\alias{[,GFileViews,ANY,missing-method}
+\alias{yieldSize,GFileViews-method}
+\alias{length,GFileViews-method}
+\alias{show,GFileViews-method}
 
 
 \title{Views into a set of files}
 \description{
 
-  \code{FileViews} is a VIRTUAL class used to reference a set of 
+  \code{GFileViews} is a VIRTUAL class used to reference a set of 
   disk-based files to be queried across views (ranges).
 
 }
@@ -45,21 +45,21 @@ fileSamples(x) <- value
 fileRanges(x)
 fileRanges(x) <- value
 fileExperiment(x)
-\S4method{yieldSize}{FileViews}(object)
+\S4method{yieldSize}{GFileViews}(object)
 fileDirname(x, ...) <- value
 
-\S4method{names}{FileViews}(x)
-\S4method{names}{FileViews}(x) <- value
-\S4method{dimnames}{FileViews}(x)
-\S4method{dimnames}{FileViews,ANY}(x) <- value
+\S4method{names}{GFileViews}(x)
+\S4method{names}{GFileViews}(x) <- value
+\S4method{dimnames}{GFileViews}(x)
+\S4method{dimnames}{GFileViews,ANY}(x) <- value
 
 ## Subset
-\S4method{[}{FileViews,ANY,ANY}(x, i, j, \dots, drop=TRUE)
-\S4method{[}{FileViews,ANY,missing}(x, i, j, \dots, drop=TRUE)
-\S4method{[}{FileViews,missing,ANY}(x, i, j, \dots, drop=TRUE)
+\S4method{[}{GFileViews,ANY,ANY}(x, i, j, \dots, drop=TRUE)
+\S4method{[}{GFileViews,ANY,missing}(x, i, j, \dots, drop=TRUE)
+\S4method{[}{GFileViews,missing,ANY}(x, i, j, \dots, drop=TRUE)
 
 ## Show
-\S4method{show}{FileViews}(object)
+\S4method{show}{GFileViews}(object)
 }
 
 \arguments{
@@ -81,9 +81,9 @@ fileDirname(x, ...) <- value
 
   \item{...}{Additional arguments.}
 
-  \item{x}{An instance of \code{FileViews}.}
+  \item{x}{An instance of \code{GFileViews}.}
 
-  \item{object}{An instance of \code{FileViews}.}
+  \item{object}{An instance of \code{GFileViews}.}
 
   \item{value}{An object of appropriate type to replace content.}
 
@@ -93,16 +93,16 @@ fileDirname(x, ...) <- value
   \item{j}{During subsetting, a logical or numeric index into
         \code{fileSamples} and \code{filePaths}.}
 
-  \item{drop}{A logical(1), \emph{ignored} by all \code{FileViews}
+  \item{drop}{A logical(1), \emph{ignored} by all \code{GFileViews}
         subsetting methods.}
 
 }
 
 \section{Objects from the Class}{
 
-  \code{FileViews} is a VIRTUAL class not intended for instantiation by
+  \code{GFileViews} is a VIRTUAL class not intended for instantiation by
   the user. The class serves as a parent for the concrete subclasses such 
-  as \code{BamFileViews}, \code{FaFileViews}, \code{TabixFileViews} etc.
+  as \code{BamGFileViews}, \code{FaGFileViews}, \code{TabixGFileViews} etc.
 
 }
 \section{Slots}{
@@ -155,17 +155,17 @@ fileDirname(x, ...) <- value
     \item{fileExperiment}{Returns a list() containing additional
       information about the experiment.}
 
-    \item{names}{Return the column names of the \code{FileViews}
+    \item{names}{Return the column names of the \code{GFileViews}
       instance; same as \code{names(fileSamples(x))}.}
 
-    \item{names<-}{Assign the column names of the \code{FileViews}
+    \item{names<-}{Assign the column names of the \code{GFileViews}
       instance.}
 
     \item{dimnames}{Return the row and column names of the
-      \code{FileViews} instance.}
+      \code{GFileViews} instance.}
 
     \item{dimnames<-}{Assign the row and column names of the
-      \code{FileViews} instance.}
+      \code{GFileViews} instance.}
 
   }
 
@@ -186,7 +186,7 @@ fileDirname(x, ...) <- value
         Valerie Obenchain <vobencha@fhcrc.org>.}
 
 \examples{
-  ## See ?BamViews, ?TabixViews, ?FaViews or other subclasses.
+  ## See ?BamGFileViews, ?TabixGFileViews, ?FaGFileViews or other subclasses.
 }
 
 \keyword{classes}
