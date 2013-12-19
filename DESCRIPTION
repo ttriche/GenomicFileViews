@@ -1,4 +1,4 @@
-Package: GFileViews
+Package: GenomicFileViews
 Title: Genomic file views 
 Description:  Query genomic views across multiple files 
 Version: 0.99.1
