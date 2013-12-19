@@ -1,8 +1,8 @@
 ### =========================================================================
-### BamGFileViews methods
+### BamFileViews methods
 ### =========================================================================
 
-setMethod(BamGFileViews, c(fileRanges="GRanges"), 
+setMethod(BamFileViews, c(fileRanges="GRanges"), 
           function(filePaths=character(0),
                    fileIndices=filePaths,
                    fileSamples=DataFrame(row.names=
@@ -12,13 +12,13 @@ setMethod(BamGFileViews, c(fileRanges="GRanges"),
                    yieldSize=NA_integer_,
                    .views_on_file=new.env(parent=emptyenv()), ...)
 {
-    new("BamGFileViews", ..., filePaths=filePaths, fileIndices=fileIndices,
+    new("BamFileViews", ..., filePaths=filePaths, fileIndices=fileIndices,
         fileSamples=fileSamples, fileRanges=fileRanges,
         fileExperiment=fileExperiment, yieldSize=yieldSize,
         .views_on_file=.views_on_file)
 })
 
-setMethod(BamGFileViews, c(fileRanges="missing"), 
+setMethod(BamFileViews, c(fileRanges="missing"), 
           function(filePaths=character(0),
                    fileIndices=filePaths,
                    fileSamples=DataFrame(row.names=
@@ -55,7 +55,7 @@ setMethod(BamGFileViews, c(fileRanges="missing"),
     } else {
         fileRanges <- GRanges()
     }
-    BamGFileViews(filePaths=filePaths, fileIndices=fileIndices, 
+    BamFileViews(filePaths=filePaths, fileIndices=fileIndices, 
                  fileSamples=fileSamples, fileRanges=fileRanges, 
                  fileExperiment=fileExperiment, yieldSize=yieldSize,
                  .views_on_file=.views_on_file, ...)
@@ -65,28 +65,28 @@ setMethod(BamGFileViews, c(fileRanges="missing"),
 ### scanBam() and countBam() methods.
 ###
 
-setMethod(scanBam, "BamGFileViews",
+setMethod(scanBam, "BamFileViews",
           function(file, index=file, ...,
                    param=ScanBamParam(what=scanBamWhat()))
 {
     if (!missing(index))
         warning("using fileIndices(file) for 'index'")
-    bamWhich(param) <- .GFileViews_which(file, param, missing(param))
+    bamWhich(param) <- .FileViews_which(file, param, missing(param))
     fun <- function(fileViews, ..., verbose)
         scanBam(file=filePaths(fileViews),
                 index=fileIndices(fileViews), ...)
-    .GFileViews_delegate("scanBam", file, fun, ..., param=param)
+    .FileViews_delegate("scanBam", file, fun, ..., param=param)
 })
 
-setMethod(countBam, "BamGFileViews",
+setMethod(countBam, "BamFileViews",
           function(file, index=file, ..., param=ScanBamParam())
 {
     if (!missing(index))
         warning("using fileIndices(file) for 'index'")
-    bamWhich(param) <- .GFileViews_which(file, param, missing(param))
+    bamWhich(param) <- .FileViews_which(file, param, missing(param))
     fun <- function(fileViews, ..., verbose)
         countBam(file=filePaths(fileViews),
                  index=fileIndices(fileViews), ...)
-    .GFileViews_delegate("countBam", file, fun, ..., param=param)
+    .FileViews_delegate("countBam", file, fun, ..., param=param)
 })
 

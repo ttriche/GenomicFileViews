@@ -1,8 +1,8 @@
 ### =========================================================================
-### FaGFileViews methods
+### FaFileViews methods
 ### =========================================================================
 
-setMethod(FaGFileViews, c(fileRanges="GRanges"), 
+setMethod(FaFileViews, c(fileRanges="GRanges"), 
           function(filePaths=character(0),
                    fileIndices=filePaths,
                    fileSamples=DataFrame(row.names=
@@ -12,13 +12,13 @@ setMethod(FaGFileViews, c(fileRanges="GRanges"),
                    yieldSize=NA_integer_,
                    .views_on_file=new.env(parent=emptyenv()), ...)
 {
-    new("FaGFileViews", ..., filePaths=filePaths, fileIndices=fileIndices,
+    new("FaFileViews", ..., filePaths=filePaths, fileIndices=fileIndices,
         fileSamples=fileSamples, fileRanges=fileRanges,
         fileExperiment=fileExperiment, yieldSize=yieldSize,
         .views_on_file=.views_on_file)
 })
 
-setMethod(FaGFileViews, c(fileRanges="missing"), 
+setMethod(FaFileViews, c(fileRanges="missing"), 
           function(filePaths=character(0),
                    fileIndices=filePaths,
                    fileSamples=DataFrame(row.names=
@@ -46,7 +46,7 @@ setMethod(FaGFileViews, c(fileRanges="missing"),
     } else {
         fileRanges <- GRanges()
     }
-    FaGFileViews(filePaths=filePaths, fileIndices=fileIndices, 
+    FaFileViews(filePaths=filePaths, fileIndices=fileIndices, 
                 fileSamples=fileSamples, fileRanges=fileRanges, 
                 fileExperiment=fileExperiment, yieldSize=yieldSize,
                 .views_on_file=.views_on_file, ...)
@@ -56,19 +56,19 @@ setMethod(FaGFileViews, c(fileRanges="missing"),
 ### scanFa() and countFa() methods.
 ###
 
-setMethod(scanFa, c("FaGFileViews", "missing"),
+setMethod(scanFa, c("FaFileViews", "missing"),
           function(file, param, ...)
 {
-    param <- .GFileViews_which(file, fileRanges(file), missing(param))
+    param <- .FileViews_which(file, fileRanges(file), missing(param))
     fun <- function(fileViews, param, ...)
         scanFa(file=filePaths(fileViews), param=param, ...)
-    .GFileViews_delegate("scanFa", file, fun, ..., param=param)
+    .FileViews_delegate("scanFa", file, fun, ..., param=param)
 })
 
-setMethod(countFa, "FaGFileViews",
+setMethod(countFa, "FaFileViews",
           function(file, ...)
 {
     fun <- function(fileViews, ..., verbose)
         countFa(file=filePaths(fileViews), ...)
-    .GFileViews_delegate("countFa", file, fun, ...)
+    .FileViews_delegate("countFa", file, fun, ...)
 })

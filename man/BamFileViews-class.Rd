@@ -1,20 +1,20 @@
-\name{BamGFileViews}
+\name{BamFileViews}
 \Rdversion{1.1}
 \docType{class}
-\alias{BamGFileViews-class}
-\alias{BamGFileViews}
-\alias{BamGFileViews,missing-method}
-\alias{BamGFileViews,GRanges-method}
+\alias{BamFileViews-class}
+\alias{BamFileViews}
+\alias{BamFileViews,missing-method}
+\alias{BamFileViews,GRanges-method}
 % accessors
 % methods
-\alias{scanBam,BamGFileViews-method}
-\alias{countBam,BamGFileViews-method}
+\alias{scanBam,BamFileViews-method}
+\alias{countBam,BamFileViews-method}
 
 
 \title{Views into a set of BAM files}
 \description{
 
-  Use \code{BamGFileViews()} to reference a set of disk-based BAM files to be
+  Use \code{BamFileViews()} to reference a set of disk-based BAM files to be
   processed (e.g., queried using \code{\link{scanBam}}) as a single
   \sQuote{experiment}.
 
@@ -23,7 +23,7 @@
 \section{Usage:}{
 
 ## Constructor
-BamGFileViews(filePaths=character(0),
+BamFileViews(filePaths=character(0),
      fileIndices=filePaths,
      fileSamples=DataFrame(row.names=make.unique(basename(filePaths))),
      fileRanges, fileExperiment = list(), yieldSize = NA_integer_,
@@ -81,9 +81,9 @@ show(object)
 
   \item{...}{Additional arguments.}
 
-  \item{x}{An instance of \code{BamGFileViews}.}
+  \item{x}{An instance of \code{BamFileViews}.}
 
-  \item{object}{An instance of \code{BamGFileViews}.}
+  \item{object}{An instance of \code{BamFileViews}.}
 
   \item{value}{An object of appropriate type to replace content.}
 
@@ -93,12 +93,12 @@ show(object)
   \item{j}{During subsetting, a logical or numeric index into
 	\code{fileSamples} and \code{filePaths}.}
 
-  \item{drop}{A logical(1), \emph{ignored} by all \code{BamGFileViews}
+  \item{drop}{A logical(1), \emph{ignored} by all \code{BamFileViews}
 	subsetting methods.}
 
   %% input
 
-  \item{file}{An instance of \code{BamGFileViews}.}
+  \item{file}{An instance of \code{BamFileViews}.}
 
   \item{index}{A character vector of indices, corresponding to the
      \code{filePaths(file)}. }
@@ -109,7 +109,7 @@ show(object)
 
 \section{Objects from the Class}{
 
-  Objects are created by calls of the form \code{BamGFileViews()}.
+  Objects are created by calls of the form \code{BamFileViews()}.
 
 }
 \section{Slots}{
@@ -144,7 +144,7 @@ show(object)
   Constructor:
   \describe{
 
-	\item{BamGFileViews:}{Returns a \code{BamGFileViews} object.}
+	\item{BamFileViews:}{Returns a \code{BamFileViews} object.}
 
   }
 
@@ -175,17 +175,17 @@ show(object)
 	\item{fileExperiment}{Returns a list() containing additional
 	  information about the experiment.}
 
-    \item{names}{Return the column names of the \code{BamGFileViews}
+    \item{names}{Return the column names of the \code{BamFileViews}
       instance; same as \code{names(fileSamples(x))}.}
 
-    \item{names<-}{Assign the column names of the \code{BamGFileViews}
+    \item{names<-}{Assign the column names of the \code{BamFileViews}
       instance.}
 
     \item{dimnames}{Return the row and column names of the
-      \code{BamGFileViews} instance.}
+      \code{BamFileViews} instance.}
 
     \item{dimnames<-}{Assign the row and column names of the
-      \code{BamGFileViews} instance.}
+      \code{BamFileViews} instance.}
 
   }
 
@@ -215,7 +215,7 @@ show(object)
 
 \examples{
   ## ---------------------------------------------------------------------
-  ## A. BamGFileView Objects
+  ## A. BamFileView Objects
   ## ---------------------------------------------------------------------
 
   fl <- system.file("extdata", "ex1.bam", package="Rsamtools",
@@ -224,7 +224,7 @@ show(object)
                   ranges = c(IRanges(seq(10000, 90000, 10000), width=500),
                              IRanges(seq(100000, 900000, 100000), width=5000)),
                   Count = seq_len(18L))
-  v <- BamGFileViews(c(fl, fl), fileRanges=rngs)
+  v <- BamFileViews(c(fl, fl), fileRanges=rngs)
   v
   v[1:5,]
   fileRanges(v[c(1:5, 11:15),])
