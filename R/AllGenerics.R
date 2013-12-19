@@ -1,4 +1,4 @@
-setGeneric("BamGFileViews",
+setGeneric("BamFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -7,10 +7,10 @@ setGeneric("BamGFileViews",
                     fileExperiment=list(), 
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("BamGFileViews"),
+           standardGeneric("BamFileViews"),
            signature="fileRanges")
 
-setGeneric("FaGFileViews",
+setGeneric("FaFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -19,10 +19,10 @@ setGeneric("FaGFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("FaGFileViews"),
+           standardGeneric("FaFileViews"),
            signature="fileRanges")
 
-setGeneric("TabixGFileViews",
+setGeneric("TabixFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -31,10 +31,10 @@ setGeneric("TabixGFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("TabixGFileViews"),
+           standardGeneric("TabixFileViews"),
            signature="fileRanges")
 
-setGeneric("VCFGFileViews",
+setGeneric("VCFFileViews",
            function(filePaths=character(0),
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
@@ -43,5 +43,5 @@ setGeneric("VCFGFileViews",
                     fileExperiment=list(),
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
-           standardGeneric("VCFGFileViews"),
+           standardGeneric("VCFFileViews"),
            signature="fileRanges")

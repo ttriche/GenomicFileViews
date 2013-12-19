@@ -4,7 +4,7 @@
 
 setGeneric(".validity", function(object) standardGeneric(".validity"))
 
-setClass("GFileViews",
+setClass("FileViews",
     representation("VIRTUAL",
         filePaths="character",
         fileIndices="character",
@@ -17,10 +17,10 @@ setClass("GFileViews",
         yieldSize=NA_integer_),
     validity=.validity)
 
-setClass("BamGFileViews", contains="GFileViews")
+setClass("BamFileViews", contains="FileViews")
 
-setClass("FaGFileViews", contains="GFileViews")
+setClass("FaFileViews", contains="FileViews")
 
-setClass("TabixGFileViews", contains="GFileViews")
+setClass("TabixFileViews", contains="FileViews")
 
-setClass("VcfGFileViews", contains="GFileViews")
+setClass("VcfFileViews", contains="FileViews")
