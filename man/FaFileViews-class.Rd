@@ -1,214 +1,182 @@
 \name{FaFileViews}
-\Rdversion{1.1}
 \docType{class}
+
+% Class:
 \alias{FaFileViews-class}
 \alias{FaFileViews}
-\alias{FaFileViews,missing-method}
-\alias{FaFileViews,GRanges-method}
-% accessors
-% methods
-\alias{scanFa,FaFileViews,missing-method}
-\alias{countFa,FaFileViews-method}
+\alias{FaFileViews,character-method}
+\alias{FaFileViews,FaFileList-method}
 
+% Methods:
+\alias{scanBam,FaFileViews-method}
+\alias{countBam,FaFileViews-method}
 
-\title{Views into a set of Fasta files}
+\title{Views into a set of BAM files}
+
 \description{
-
-  Use \code{FaFileViews()} to reference a set of disk-based Fasta files to be
-  processed (e.g., queried using \code{\link{scanFa}}) as a single
+  Use \code{FaFileViews()} to reference a set of disk-based BAM files to be
+  processed (e.g., queried using \code{\link{scanBam}}) as a single
   \sQuote{experiment}.
-
 }
 
-\section{Usage:}{
-
-## Constructor
-FaFileViews(filePaths=character(0),
-     fileIndices=filePaths,
-     fileSamples=DataFrame(row.names=make.unique(basename(filePaths))),
-     fileRanges, fileExperiment = list(), yieldSize = NA_integer_,
-     .views_on_file = new.env(parent=emptyenv()), ...)
-
-## Accessors
-filePaths(x)
-fileSamples(x)
-fileSamples(x) <- value
-fileRanges(x)
-fileRanges(x) <- value
-fileExperiment(x)
-names(x)
-names(x) <- value
-dimnames(x) 
-dimnames(x) <- value
-fileDirname(x, ...) <- value
-length(x)
-
-## Input
-scanFa(file, param, ...)
-countFa(file, ...)
-
-## Show
-show(object)
+\section{Constructor}{
+  \describe{
+    \item{}{
+      \code{FaFileViews(filePaths, fileIndices=filePaths,
+        fileSamples=DataFrame(row.names=make.unique(basename(filePaths))),
+        fileRanges, fileExperiment = list(), byFile = TRUE,
+        yieldSize = NA_integer_, 
+        .views_on_file = new.env(parent=emptyenv()), ...)}:
+      This constructor is a generic function with dispatch on argument
+      \code{filePaths}. Methods exist for \link{FaFileList} and character 
+      (vector of file names). 
+    }
+  }
 }
 
-\arguments{
-
-  \item{filePaths}{A character() vector of Fasta path names.}
-
-  \item{fileIndices}{A character() vector of Fasta index file path names,
-    \emph{without} the \sQuote{.bai} extension.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-	many rows as \code{length(filePaths)}, containing sample information
-	associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}}, or missing instance 
-        with ranges defined on the spaces of the Fasta files. Ranges are 
-        \emph{not} validated against the Fasta files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-	the experiment.}
-  \item{yieldSize}{An integer specifying number of records to process}
-
-  \item{.views_on_file}{An enviornment. Currently under development}
-
-  \item{param}{Unused option for \code{FaFileViews} object. \code{fileRanges}
-        are used to specify ranges to query.}
-
-  \item{...}{Additional arguments.}
-
-  \item{x}{An instance of \code{FaFileViews}.}
-
-  \item{object}{An instance of \code{FaFileViews}.}
-
-  \item{value}{An object of appropriate type to replace content.}
-
-  \item{i}{During subsetting, a logical or numeric index into
-	\code{fileRanges}.}
-
-  \item{j}{During subsetting, a logical or numeric index into
-	\code{fileSamples} and \code{filePaths}.}
-
-  \item{drop}{A logical(1), \emph{ignored} by all \code{FaFileViews}
-	subsetting methods.}
-
-  %% input
-
-  \item{file}{An instance of \code{FaFileViews}.}
-
-  \item{index}{A character vector of indices, corresponding to the
-     \code{filePaths(file)}. }
+\section{Accessors}{
+  All accessor-like methods defined for \code{FileViews} objects
+  work on \code{FaFileViews} objects. See ?\code{FileViews} for details.
+  \itemize{
+    \item{fileList(x); fileList(x) <- value}
+    \item{filePaths(x); filePaths(x) <- value}
+    \item{fileIndices(x); fileIndices(x0 <- value}
+    \item{fileSamples(x); fileSamples(x) <- value}
+    \item{fileExperiment(x); fileExpermient(x) <- value}
+    \item{byFile(x); byFile(x) <- value}
+    \item{yieldSize(x); yieldSize(x) <- value}
+  }
 }
 
-\section{Objects from the Class}{
-
-  Objects are created by calls of the form \code{FaFileViews()}.
-
+\section{Subsetting}{
+  \describe{
+    \item{}{
+      \code{"["}: Subset the object by \code{fileRanges} or \code{fileSamples}.
+    }
+  }
 }
+
+\section{Other methods}{
+  In the code snippets below, \code{file} is a FaFileViews object.
+
+  \describe{
+    \item{}{
+       \code{scanFa(file, param = ScanBamParam(what=scanBamWhat()))}:
+       Visit each path in \code{filePaths(file)}, returning
+       the result of \code{scanBam} applied to the specified
+       path. \code{fileRanges(file)} takes precedence over
+       \code{bamWhich(param)}.
+    }
+    \item{}{
+       \code{countFa(file, ...)}:
+       Visit each path in \code{filePaths(file)}, returning
+       the result of \code{countBam} applied to the specified
+       path. \code{fileRanges(file)} takes precedence over
+       \code{bamWhich(param)}.
+    }
+  }
+}
+
+\section{Arguments}{
+  \describe{
+    \item{}{
+       \code{filePaths}:
+         A character() vector of BAM path names or a \code{\linkS4class{FaFileList}}.
+    }
+    \item{}{
+      \code{fileIndices}:
+        A character() vector of BAM index file path names, \emph{without} the 
+        \sQuote{.bai} extension.
+    }
+    \item{}{
+      \code{fileSamples}:
+        A \code{\linkS4class{DataFrame}} instance with as many rows as 
+        \code{length(filePaths)}, containing sample information associated with 
+        each path.
+    }
+    \item{}{
+      \code{fileRanges}:
+        A \code{\linkS4class{GRanges}}, or missing instance with ranges defined 
+        on the spaces of the BAM files. Ranges are \emph{not} validated against 
+        the BAM files.
+    }
+    \item{}{
+      \code{fileExperiment}:
+        A list() containing additional information about the experiment.
+    }
+    \item{}{
+      \code{byFile}:
+        A logical specifying if parallel execution should be by file or by 
+        range.
+    }
+    \item{}{
+      \code{yieldSize}: An integer specifying number of records to process
+    }
+    \item{}{
+        \code{.views_on_file}: An enviornment; currently under development
+    }
+    \item{}{
+      \code{...}: Additional arguments.
+    }
+    \item{}{
+      \code{x}, \code{object}: An instance of \code{FaFileViews}.
+    }
+    \item{}{
+      \code{value}: An object of appropriate type to replace content.
+    }
+    \item{}{
+      \code{i}: 
+      During subsetting, a logical or numeric index into \code{fileRanges}.
+    }
+    \item{}{
+      \code{j}: 
+      During subsetting, a logical or numeric index into \code{fileSamples} 
+      and \code{filePaths}.
+    }
+    \item{}{
+      \code{file}: An instance of \code{FaFileViews}.
+    }
+    \item{}{
+      \code{index}: Not used.
+    }
+    \item{}{
+      \code{param}:
+      Unused option for \code{FaFileViews} object. \code{fileRanges}
+      are used to specify ranges to query.
+    }
+  }
+}
+
 \section{Slots}{
   \describe{
-
-  \item{filePaths}{A character() vector of Fasta path names.}
-
-  \item{fileIndices}{A character() vector of Fasta index path names.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-	many rows as \code{length(filePaths)}, containing sample information
-	associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}} instance with
-	ranges defined on the spaces of the Fasta files. Ranges are \emph{not}
-	validated against the Fasta files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-	the experiment.}
-
-  \item{yieldSize}{An integer specifying the data chunk size.}
-
-  \item{.views_on_file}{An enviornment. Currently under construction.}
-
+  Inherited from \code{FileViews} class:
+    \itemize{
+      \item filePaths
+      \item fileIndices
+      \item fileSamples
+      \item fileRanges
+      \item fileExperiment
+      \item byFile 
+      \item yieldSize
+      \item .views_on_file
+    }
   }
 }
 
-\section{Functions and methods}{
-
-  See 'Usage' for details on invocation.
-
-  Constructor:
-  \describe{
-
-	\item{FaFileViews:}{Returns a \code{FaFileViews} object.}
-
+\seealso{
+  \itemize{
+    \item \link{FileViews-class}.
   }
-
-  Accessors:
-  \describe{
-
-	\item{filePaths}{Returns a character() vector of Fasta path names.}
-
-	\item{fileIndices}{Returns a character() vector of Fasta index path
-      names.}
-
-	\item{fileSamples}{Returns a \code{\linkS4class{DataFrame}} instance
-	  with as many rows as \code{length(filePaths)}, containing sample
-	  information associated with each path.}
-
-	\item{fileSamples<-}{Assign a \code{\linkS4class{DataFrame}} instance
-	  with as many rows as \code{length(filePaths)}, containing sample
-	  information associated with each path.}
-
-	\item{fileRanges}{Returns a \code{\linkS4class{GRanges}} instance
-	  with ranges defined on the spaces of the Fasta files. Ranges are
-	  \emph{not} validated against the Fasta files.}
-
-	\item{fileRanges<-}{Assign a \code{\linkS4class{GRanges}} instance
-	  with ranges defined on the spaces of the Fasta files. Ranges are
-	  \emph{not} validated against the Fasta files.}
-
-	\item{fileExperiment}{Returns a list() containing additional
-	  information about the experiment.}
-
-    \item{names}{Return the column names of the \code{FaFileViews}
-      instance; same as \code{names(fileSamples(x))}.}
-
-    \item{names<-}{Assign the column names of the \code{FaFileViews}
-      instance.}
-
-    \item{dimnames}{Return the row and column names of the
-      \code{FaFileViews} instance.}
-
-    \item{dimnames<-}{Assign the row and column names of the
-      \code{FaFileViews} instance.}
-
-  }
-
-  Methods:
-  \describe{
-
-    \item{"["}{Subset the object by \code{fileRanges} or \code{fileSamples}.}
-
-    \item{scanFa}{Visit each path in \code{filePaths(file)}, returning
-      the result of \code{scanFa} applied to the specified
-      path. \code{fileRanges(file)} takes precedence over
-      \code{fileWhich(param)}.}
-
-    \item{countFa}{Visit each path in \code{filePaths(file)}, returning
-      the result of \code{countFa} applied to the specified
-      path.}
-
-    \item{length}{Display the length of the object (number of files).}
-
-    \item{show}{Compactly display the object.}
-
-  }
-
 }
-\author{Martin Morgan, Valerie Obenchain}
+
+\author{Martin Morgan <mtmorgan@fhcrc.org> and 
+        Valerie Obenchain <vobencha@fhcrc.org>.}
 
 \examples{
   ## ---------------------------------------------------------------------
   ## A. FaFileView Objects
   ## ---------------------------------------------------------------------
+
   library(Rsamtools)
   fl <- system.file("extdata", "ce2dict1.fa", package="Rsamtools",
                     mustWork=TRUE)
@@ -219,12 +187,13 @@ show(object)
   fileRanges(v)
   fileDirname(v) <- getwd()
   v
- 
+
   ## ---------------------------------------------------------------------
-  ## B. countFa() and scanFa() 
+  ## B. countFa and scanFa 
   ## ---------------------------------------------------------------------
-  #countFa(v)
-  #dna <- scanFa(v, param=rngs[1:2])
+  v <- FaFileViews(c(fl, fl), fileRanges=rngs)
+  countFa(v)
+  scanFa(v)
 }
 
 \keyword{classes}

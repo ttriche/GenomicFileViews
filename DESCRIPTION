@@ -1,7 +1,7 @@
 Package: GenomicFileViews
 Title: Genomic file views 
 Description:  Query genomic views across multiple files 
-Version: 0.99.1
+Version: 0.99.2
 Author: The Bioconductor Dev Team
 Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
 biocViews: Infrastructure

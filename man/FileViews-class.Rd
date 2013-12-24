@@ -1,18 +1,29 @@
 \name{FileViews}
-\Rdversion{1.1}
 \docType{class}
-\alias{FileViews-class}
+
+% Class:
 \alias{FileViews}
-% accessors
+\alias{class:FileViews}
+\alias{FileViews-class}
+
+% Accessors:
+\alias{fileList}
+\alias{fileList<-}
 \alias{filePaths}
+\alias{filePaths<-}
 \alias{fileIndices}
+\alias{fileIndices<-}
 \alias{fileSamples}
-\alias{fileRanges}
-\alias{fileExperiment}
-\alias{fileDirname<-}
 \alias{fileSamples<-}
+\alias{fileRanges}
 \alias{fileRanges<-}
-% methods
+\alias{fileExperiment}
+\alias{fileExperiment<-}
+\alias{fileDirname<-}
+\alias{byFile}
+\alias{byFile<-}
+
+% Methods:
 \alias{names,FileViews-method}
 \alias{names<-,FileViews-method}
 \alias{dim,FileViews-method}
@@ -23,170 +34,167 @@
 \alias{[,FileViews,ANY,ANY-method}
 \alias{[,FileViews,ANY,missing-method}
 \alias{yieldSize,FileViews-method}
-\alias{length,FileViews-method}
+\alias{yieldSize<-,FileViews-method}
 \alias{show,FileViews-method}
 
+% Other: 
+\alias{delegateByFile}
+\alias{delegateByRange}
 
 \title{Views into a set of files}
-\description{
 
+\description{
   \code{FileViews} is a VIRTUAL class used to reference a set of 
   disk-based files to be queried across views (ranges).
-
-}
-
-\usage{
-
-## Accessors
-filePaths(x)
-fileIndices(x)
-fileSamples(x)
-fileSamples(x) <- value
-fileRanges(x)
-fileRanges(x) <- value
-fileExperiment(x)
-\S4method{yieldSize}{FileViews}(object)
-fileDirname(x, ...) <- value
-
-\S4method{names}{FileViews}(x)
-\S4method{names}{FileViews}(x) <- value
-\S4method{dimnames}{FileViews}(x)
-\S4method{dimnames}{FileViews,ANY}(x) <- value
-
-## Subset
-\S4method{[}{FileViews,ANY,ANY}(x, i, j, \dots, drop=TRUE)
-\S4method{[}{FileViews,ANY,missing}(x, i, j, \dots, drop=TRUE)
-\S4method{[}{FileViews,missing,ANY}(x, i, j, \dots, drop=TRUE)
-
-## Show
-\S4method{show}{FileViews}(object)
-}
-
-\arguments{
-
-  \item{filePaths}{A character() vector of file path names.}
-
-  \item{fileIndices}{A character() vector of file index path names.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-        many rows as \code{length(filePaths)}, containing sample information
-        associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}},
-        \code{\linkS4class{RangedData}} or missing instance with ranges
-        defined on the spaces of the files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-        the experiment.}
-
-  \item{...}{Additional arguments.}
-
-  \item{x}{An instance of \code{FileViews}.}
-
-  \item{object}{An instance of \code{FileViews}.}
-
-  \item{value}{An object of appropriate type to replace content.}
-
-  \item{i}{During subsetting, a logical or numeric index into
-        \code{fileRanges}.}
-
-  \item{j}{During subsetting, a logical or numeric index into
-        \code{fileSamples} and \code{filePaths}.}
-
-  \item{drop}{A logical(1), \emph{ignored} by all \code{FileViews}
-        subsetting methods.}
-
 }
 
 \section{Objects from the Class}{
-
   \code{FileViews} is a VIRTUAL class not intended for instantiation by
   the user. The class serves as a parent for the concrete subclasses such 
   as \code{BamFileViews}, \code{FaFileViews}, \code{TabixFileViews} etc.
-
 }
+
 \section{Slots}{
+
   \describe{
+    \item{}{
+      \code{fileList}: 
+      List of of length >= 2 containing the file path and index names. 
+      List names must include \sQuote{path} and \sQuote{index}.
+    }
+    \item{}{
+      \code{fileSamples}:
+        A \code{\linkS4class{DataFrame}} instance with as many rows as 
+        \code{length(filePaths)}, containing sample information associated 
+        with each path.
+    }
+    \item{}{
+      \code{fileRanges}:
+      A \code{\linkS4class{GRanges}} instance with ranges defined on the 
+      spaces of the files.
+    }
+    \item{}{
+      \code{fileExperiment}:
+      A list() containing additional information about the experiment.
+    }
+    \item{}{
+      \code{byFile}:
+        A logical specifying if the code should be run in parallel by 
+        file or by range.  When TRUE, files are distributed to workers 
+        and the code is run on each file. When FALSE, distribution is by
+        the ranges in fileRanges(object).
 
-  \item{filePaths}{A character() vector of file path names.}
-
-  \item{fileIndices}{A character() vector of file index path names.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-        many rows as \code{length(filePaths)}, containing sample information
-        associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}} instance with
-        ranges defined on the spaces of the files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-        the experiment.}
-
-  \item{yieldSize}{An integer specifying the data chunk size.}
-
-  \item{.views_on_file}{An enviornment. Currently under construction.}
+        The value of \code{byFile} dictates use of the \code{delegateByFile} 
+        or \code{delegateByRange} functions.
+        FIXME: More to be added here about the requirements of the
+        \code{fun} argument.
+    }
+    \item{}{
+      \code{yieldSize}:
+        An integer specifying the data chunk size.
+    }
+    \item{}{
+      \code{.views_on_file}:
+        An enviornment. Under construction / future use.
+    }
   }
 }
 
-\section{Functions and methods}{
+\section{Accessors}{
+  In the code snippets below, \code{x} is a FileViews object.
 
-  Accessors:
   \describe{
-
-    \item{filePaths}{Returns a character() vector of file path names.}
-
-    \item{fileIndices}{Returns a character() vector of file index path
-      names.}
-
-    \item{fileSamples}{Returns a \code{\linkS4class{DataFrame}} instance
-      with as many rows as \code{length(filePaths)}, containing sample
-      information associated with each path.}
-
-    \item{fileSamples<-}{Assign a \code{\linkS4class{DataFrame}} instance
-      with as many rows as \code{length(filePaths)}, containing sample
-      information associated with each path.}
-
-    \item{fileRanges}{Returns a \code{\linkS4class{GRanges}} instance
-      with ranges defined on the spaces of the files.}
-
-    \item{fileRanges<-}{Assign a \code{\linkS4class{GRanges}} instance
-      with ranges defined on the spaces of the files.}
-
-    \item{fileExperiment}{Returns a list() containing additional
-      information about the experiment.}
-
-    \item{names}{Return the column names of the \code{FileViews}
-      instance; same as \code{names(fileSamples(x))}.}
-
-    \item{names<-}{Assign the column names of the \code{FileViews}
-      instance.}
-
-    \item{dimnames}{Return the row and column names of the
-      \code{FileViews} instance.}
-
-    \item{dimnames<-}{Assign the row and column names of the
-      \code{FileViews} instance.}
-
+    item{}{
+      \code{fileList(x)}, \code{fileList(x) <- value}:
+      Get or set the fileList on \code{x}. \code{value} must be 
+      a SimpleList of length >= 2. List names must include \sQuote{path}
+      and \sQuote{index}.
+    }
+    \item{}{
+      \code{filePaths}, \code{filePaths(x) <- value}:
+      Get or set the filePaths on \code{x}. \code{value} must be
+      a character() vector.
+    }
+    \item{}{
+      \code{fileIndices}, \code{fileIndices(x) <- value}:
+      Get or set the fileIndices on \code{x}. \code{value} must be
+      a character() vector.
+    }
+    \item{}{
+      \code{fileSamples}, \code{fileSamples(x) <- value}:
+      Get or set the fileSamples on \code{x}. \code{value} must be
+      a \code{\linkS4class{DataFrame}} instance with as many rows as 
+      \code{length(filePaths)}, containing sample
+      information associated with each path.
+    }
+    \item{}{
+      \code{fileRanges}, \code{fileRanges(x) <- value}:
+      Get or set the fileSamples on \code{x}. \code{value} must be
+      a \code{\linkS4class{GRanges}} instance.
+    }
+    \item{}{
+      \code{fileExperiment}, \code{fileExperiment(x) <- value}:
+      Get or set the fileExperiment on \code{x}. \code{value} must be
+      a list().
+    }
+    \item{}{
+      \code{byFile}, \code{byFile(x) <- value}:
+      Get or set the byFile value on \code{x}. \code{value} must be
+      a logical.
+    }
+    \item{}{
+      \code{yieldSize}, \code{yieldSize(x) <- value}:
+      Get or set the yieldSize on \code{x}. \code{value} must be
+      an integer.
+    }
+    \item{}{
+      \code{names}, \code{names(x) <- value}:
+      Get or set the names on \code{x}. These are the column
+      names of the \code{FileViews} instance corresponding to
+      the filePaths.
+    }
+    \item{}{
+      \code{dimnames}, \code{dimnames(x) <- value}:
+      Get or set the row and column names on \code{x}.
+    }
   }
+}
 
-  Methods:
+\section{Other operations}{
+  In the code snippets below, \code{x} is a FileViews object.
+
   \describe{
-
-    \item{"["}{Subset the object by \code{fileRanges} or \code{fileSamples}.}
-
-    \item{show}{Compactly display the object.}
-
-    \item{length}{Display the length of the object (number of files).}
-
+    \item{}{
+      \code{"["}:
+      Subset the object by \code{fileRanges} or \code{fileSamples}.
+    }
+    \item{}{
+      \code{show}:
+      Compactly display the object.
+    }
+    \item{}{
+      \code{delegateByFile}:
+      Parallel computations are distributed by files in \code{filePaths}.
+    }
+    \item{}{
+      \code{delegateByRange}:
+      Parallel computations are distributed by ranges in \code{fileRanges}.
+    }
   }
+}
 
+\seealso{
+  \itemize{
+    \item \link{BamFileViews-class}.
+    \item \link{FaFileViews-class}.
+  }
 }
 
 \author{Martin Morgan <mtmorgan@fhcrc.org> and 
         Valerie Obenchain <vobencha@fhcrc.org>.}
 
 \examples{
-  ## See ?BamFileViews, ?TabixFileViews, ?FaFileViews or other subclasses.
+  ## See ?BamFileViews, ?TabixFileViews, ?FaFileViews.
 }
 
 \keyword{classes}

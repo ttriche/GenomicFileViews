@@ -1,217 +1,177 @@
 \name{BamFileViews}
-\Rdversion{1.1}
 \docType{class}
+
+% Class:
 \alias{BamFileViews-class}
 \alias{BamFileViews}
-\alias{BamFileViews,missing-method}
-\alias{BamFileViews,GRanges-method}
-% accessors
-% methods
+\alias{BamFileViews,character-method}
+\alias{BamFileViews,BamFileList-method}
+
+% Methods:
 \alias{scanBam,BamFileViews-method}
 \alias{countBam,BamFileViews-method}
 
-
 \title{Views into a set of BAM files}
-\description{
 
+\description{
   Use \code{BamFileViews()} to reference a set of disk-based BAM files to be
   processed (e.g., queried using \code{\link{scanBam}}) as a single
   \sQuote{experiment}.
-
 }
 
-\section{Usage:}{
-
-## Constructor
-BamFileViews(filePaths=character(0),
-     fileIndices=filePaths,
-     fileSamples=DataFrame(row.names=make.unique(basename(filePaths))),
-     fileRanges, fileExperiment = list(), yieldSize = NA_integer_,
-     .views_on_file = new.env(parent=emptyenv()), ...)
-
-## Accessors
-filePaths(x)
-fileSamples(x)
-fileSamples(x) <- value
-fileRanges(x)
-fileRanges(x) <- value
-fileExperiment(x)
-yieldSize(x)
-names(x)
-names(x) <- value
-dimnames(x) 
-dimnames(x) <- value
-fileDirname(x, ...) <- value
-length(x)
-
-## Input
-scanBam(file, index = file, ..., 
-        param = ScanBamParam(what=scanBamWhat()))
-countBam(file, index = file, ..., param = ScanBamParam())
-
-## Show
-show(object)
+\section{Constructor}{
+  \describe{
+    \item{}{
+      \code{BamFileViews(filePaths, fileIndices=filePaths,
+        fileSamples=DataFrame(row.names=make.unique(basename(filePaths))),
+        fileRanges, fileExperiment = list(), byFile = TRUE,
+        yieldSize = NA_integer_, 
+        .views_on_file = new.env(parent=emptyenv()), ...)}:
+      This constructor is a generic function with dispatch on argument
+      \code{filePaths}. Methods exist for \link{BamFileList} and character 
+      (vector of file names). 
+    }
+  }
 }
 
-\arguments{
-
-  \item{filePaths}{A character() vector of BAM path names.}
-
-  \item{fileIndices}{A character() vector of BAM index file path names,
-    \emph{without} the \sQuote{.bai} extension.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-	many rows as \code{length(filePaths)}, containing sample information
-	associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}}, or missing instance 
-        with ranges defined on the spaces of the BAM files. Ranges are 
-        \emph{not} validated against the BAM files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-        the experiment.}
-
-  \item{yieldSize}{An integer specifying number of records to process}
-
-  \item{.views_on_file}{An enviornment. Currently under development}
-
-  \item{auto.range}{If \code{TRUE} and all \code{filePaths} exist,
-    populate the ranges with the union of ranges returned in the
-    \code{target} element of \code{scanBamHeader}.}
-
-  \item{...}{Additional arguments.}
-
-  \item{x}{An instance of \code{BamFileViews}.}
-
-  \item{object}{An instance of \code{BamFileViews}.}
-
-  \item{value}{An object of appropriate type to replace content.}
-
-  \item{i}{During subsetting, a logical or numeric index into
-	\code{fileRanges}.}
-
-  \item{j}{During subsetting, a logical or numeric index into
-	\code{fileSamples} and \code{filePaths}.}
-
-  \item{drop}{A logical(1), \emph{ignored} by all \code{BamFileViews}
-	subsetting methods.}
-
-  %% input
-
-  \item{file}{An instance of \code{BamFileViews}.}
-
-  \item{index}{A character vector of indices, corresponding to the
-     \code{filePaths(file)}. }
-
-  \item{param}{An optional \code{\linkS4class{ScanBamParam}} instance to
-     further influence scanning or counting.}
+\section{Accessors}{
+  All accessor-like methods defined for \code{FileViews} objects
+  work on \code{BamFileViews} objects. See ?\code{FileViews} for details.
+  \itemize{
+    \item{fileList(x); fileList(x) <- value}
+    \item{filePaths(x); filePaths(x) <- value}
+    \item{fileIndices(x); fileIndices(x0 <- value}
+    \item{fileSamples(x); fileSamples(x) <- value}
+    \item{fileExperiment(x); fileExpermient(x) <- value}
+    \item{byFile(x); byFile(x) <- value}
+    \item{yieldSize(x); yieldSize(x) <- value}
+  }
 }
 
-\section{Objects from the Class}{
-
-  Objects are created by calls of the form \code{BamFileViews()}.
-
+\section{Subsetting}{
+  \describe{
+    \item{}{
+      \code{"["}: Subset the object by \code{fileRanges} or \code{fileSamples}.
+    }
+  }
 }
+
+\section{Other methods}{
+  In the code snippets below, \code{file} is a BamFileViews object.
+
+  \describe{
+    \item{}{
+       \code{scanBam(file, index = file, ..., 
+           param = ScanBamParam(what=scanBamWhat()))}:
+       Visit each path in \code{filePaths(file)}, returning
+       the result of \code{scanBam} applied to the specified
+       path. \code{fileRanges(file)} takes precedence over
+       \code{bamWhich(param)}.
+    }
+    \item{}{
+       \code{countBam(file, index = file, ..., param = ScanBamParam())}:
+       Visit each path in \code{filePaths(file)}, returning
+       the result of \code{countBam} applied to the specified
+       path. \code{fileRanges(file)} takes precedence over
+       \code{bamWhich(param)}.
+    }
+  }
+}
+
+\section{Arguments}{
+  \describe{
+    \item{}{
+       \code{filePaths}:
+         A character() vector of BAM path names or a \code{\linkS4class{BamFileList}}.
+    }
+    \item{}{
+      \code{fileIndices}:
+        A character() vector of BAM index file path names, \emph{without} the 
+        \sQuote{.bai} extension.
+    }
+    \item{}{
+      \code{fileSamples}:
+        A \code{\linkS4class{DataFrame}} instance with as many rows as 
+        \code{length(filePaths)}, containing sample information associated with 
+        each path.
+    }
+    \item{}{
+      \code{fileRanges}:
+        A \code{\linkS4class{GRanges}}, or missing instance with ranges defined 
+        on the spaces of the BAM files. Ranges are \emph{not} validated against 
+        the BAM files.
+    }
+    \item{}{
+      \code{fileExperiment}:
+        A list() containing additional information about the experiment.
+    }
+    \item{}{
+      \code{byFile}:
+        A logical specifying if parallel execution should be by file or by 
+        range.
+    }
+    \item{}{
+      \code{yieldSize}: An integer specifying number of records to process
+    }
+    \item{}{
+        \code{.views_on_file}: An enviornment; currently under development
+    }
+    \item{}{
+      \code{...}: Additional arguments.
+    }
+    \item{}{
+      \code{x}, \code{object}: An instance of \code{BamFileViews}.
+    }
+    \item{}{
+      \code{value}: An object of appropriate type to replace content.
+    }
+    \item{}{
+      \code{i}: 
+      During subsetting, a logical or numeric index into \code{fileRanges}.
+    }
+    \item{}{
+      \code{j}: 
+      During subsetting, a logical or numeric index into \code{fileSamples} 
+      and \code{filePaths}.
+    }
+    \item{}{
+      \code{file}: An instance of \code{BamFileViews}.
+    }
+    \item{}{
+      \code{index}: Not used.
+    }
+    \item{}{
+      \code{param}:
+      An optional \code{\linkS4class{ScanBamParam}} instance to further 
+      influence scanning or counting.
+    }
+  }
+}
+
 \section{Slots}{
   \describe{
-
-  \item{filePaths}{A character() vector of BAM path names.}
-
-  \item{fileIndices}{A character() vector of BAM index path names.}
-
-  \item{fileSamples}{A \code{\linkS4class{DataFrame}} instance with as
-	many rows as \code{length(filePaths)}, containing sample information
-	associated with each path.}
-
-  \item{fileRanges}{A \code{\linkS4class{GRanges}} instance with
-	ranges defined on the spaces of the BAM files. Ranges are \emph{not}
-	validated against the BAM files.}
-
-  \item{fileExperiment}{A list() containing additional information about
-	the experiment.}
-
-  \item{yieldSize}{An integer specifying the data chunk size.}
-
-  \item{.views_on_file}{An enviornment. Currently under construction.}
-
+  Inherited from \code{FileViews} class:
+    \itemize{
+      \item filePaths
+      \item fileIndices
+      \item fileSamples
+      \item fileRanges
+      \item fileExperiment
+      \item byFile 
+      \item yieldSize
+      \item .views_on_file
+    }
   }
 }
 
-\section{Functions and methods}{
-
-  See 'Usage' for details on invocation.
-
-  Constructor:
-  \describe{
-
-	\item{BamFileViews:}{Returns a \code{BamFileViews} object.}
-
+\seealso{
+  \itemize{
+    \item \link{FileViews-class}.
   }
-
-  Accessors:
-  \describe{
-
-	\item{filePaths}{Returns a character() vector of BAM path names.}
-
-	\item{fileIndices}{Returns a character() vector of BAM index path
-      names.}
-
-	\item{fileSamples}{Returns a \code{\linkS4class{DataFrame}} instance
-	  with as many rows as \code{length(filePaths)}, containing sample
-	  information associated with each path.}
-
-	\item{fileSamples<-}{Assign a \code{\linkS4class{DataFrame}} instance
-	  with as many rows as \code{length(filePaths)}, containing sample
-	  information associated with each path.}
-
-	\item{fileRanges}{Returns a \code{\linkS4class{GRanges}} instance
-	  with ranges defined on the spaces of the BAM files. Ranges are
-	  \emph{not} validated against the BAM files.}
-
-	\item{fileRanges<-}{Assign a \code{\linkS4class{GRanges}} instance
-	  with ranges defined on the spaces of the BAM files. Ranges are
-	  \emph{not} validated against the BAM files.}
-
-	\item{fileExperiment}{Returns a list() containing additional
-	  information about the experiment.}
-
-    \item{names}{Return the column names of the \code{BamFileViews}
-      instance; same as \code{names(fileSamples(x))}.}
-
-    \item{names<-}{Assign the column names of the \code{BamFileViews}
-      instance.}
-
-    \item{dimnames}{Return the row and column names of the
-      \code{BamFileViews} instance.}
-
-    \item{dimnames<-}{Assign the row and column names of the
-      \code{BamFileViews} instance.}
-
-  }
-
-  Methods:
-  \describe{
-
-    \item{"["}{Subset the object by \code{fileRanges} or \code{fileSamples}.}
-
-    \item{scanBam}{Visit each path in \code{filePaths(file)}, returning
-      the result of \code{scanBam} applied to the specified
-      path. \code{fileRanges(file)} takes precedence over
-      \code{bamWhich(param)}.}
-
-    \item{countBam}{Visit each path in \code{filePaths(file)}, returning
-      the result of \code{countBam} applied to the specified
-      path. \code{fileRanges(file)} takes precedence over
-      \code{bamWhich(param)}.}
-
-    \item{length}{Display the length of the object (number of files).}
-
-    \item{show}{Compactly display the object.}
-
-  }
-
 }
-\author{Martin Morgan, Valerie Obenchain}
+
+\author{Martin Morgan <mtmorgan@fhcrc.org> and 
+        Valerie Obenchain <vobencha@fhcrc.org>.}
 
 \examples{
   ## ---------------------------------------------------------------------
@@ -234,8 +194,9 @@ show(object)
   ## ---------------------------------------------------------------------
   ## B. countBam and scanBam 
   ## ---------------------------------------------------------------------
-  #countBam(v)
-  #scanBam(v)
+  v <- BamFileViews(c(fl, fl))
+  countBam(v)
+  scanBam(v)
 }
 
 \keyword{classes}

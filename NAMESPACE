@@ -6,19 +6,23 @@ import(BiocParallel)
 import(GenomicRanges)
 
 ## Rsamtools
-importClassesFrom(Rsamtools, ScanBamParam)
-importFrom(Rsamtools, 
+importClassesFrom(Rsamtools, ScanBamParam, BamFile, BamFileList)
+importFrom(Rsamtools,
+    path, index,
+    BamFile, BamFileList, 
     scanBamHeader, scanBamWhat, bamWhich, "bamWhich<-")
-importMethodsFrom(Rsamtools, 
+importMethodsFrom(Rsamtools,
+    path,
     ScanBamParam, scanBam, countBam, scanFa, countFa, 
     yieldSize, "yieldSize<-", scanFaIndex)
 
 export(
     ## from R/FileViews:
-    filePaths, fileIndices,
-    fileSamples, "fileSamples<-", fileRanges, "fileRanges<-",
-    fileExperiment, "fileDirname<-"
-
+    fileList, "fileList<-", filePaths, "filePaths<-",
+    fileIndices, "fileIndices<-", fileSamples, "fileSamples<-", 
+    fileRanges, "fileRanges<-", fileExperiment, "fileExperiment<-",
+    "fileDirname<-", byFile, "byFile<-",
+    delegateByFile, delegateByRange
 )
 
 exportClasses(
@@ -27,7 +31,7 @@ exportClasses(
 
 exportMethods(
     ## from R/FileViews:
-    "[", dim, names, show,
+    "[", dim, names, show, yieldSize,
 
     ## from R/BamFileViews:
     BamFileViews, scanBam, countBam, 

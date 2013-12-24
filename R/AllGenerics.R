@@ -1,47 +1,51 @@
 setGeneric("BamFileViews",
-           function(filePaths=character(0),
+           function(filePaths,
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
                       make.unique(basename(filePaths))),
-                    fileRanges,
+                    fileRanges=GRanges(),
                     fileExperiment=list(), 
+                    byFile=TRUE,
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
            standardGeneric("BamFileViews"),
-           signature="fileRanges")
+           signature="filePaths")
 
 setGeneric("FaFileViews",
-           function(filePaths=character(0),
+           function(filePaths,
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
                       make.unique(basename(filePaths))),
-                    fileRanges,
+                    fileRanges=GRanges(),
                     fileExperiment=list(),
+                    byFile=TRUE,
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
            standardGeneric("FaFileViews"),
-           signature="fileRanges")
+           signature="filePaths")
 
 setGeneric("TabixFileViews",
-           function(filePaths=character(0),
+           function(filePaths,
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
                       make.unique(basename(filePaths))),
-                    fileRanges,
+                    fileRanges=GRanges(),
                     fileExperiment=list(),
+                    byFile=TRUE,
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
            standardGeneric("TabixFileViews"),
-           signature="fileRanges")
+           signature="filePaths")
 
 setGeneric("VCFFileViews",
-           function(filePaths=character(0),
+           function(filePaths,
                     fileIndices=filePaths,
                     fileSamples=DataFrame(row.names=
                       make.unique(basename(filePaths))),
-                    fileRanges,
+                    fileRanges=GRanges(),
                     fileExperiment=list(),
+                    byFile=TRUE,
                     yieldSize="NA_integer_",
                    .views_on_file="environment", ...)
            standardGeneric("VCFFileViews"),
-           signature="fileRanges")
+           signature="filePaths")

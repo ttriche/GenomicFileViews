@@ -2,63 +2,60 @@
 ### BamFileViews methods
 ### =========================================================================
 
-setMethod(BamFileViews, c(fileRanges="GRanges"), 
-          function(filePaths=character(0),
-                   fileIndices=filePaths,
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Validity. 
+###
+
+setMethod(.validity, "BamFileViews", 
+    function(object) {
+        msg <- NULL
+        if (length(fileIndices(object)) != length(filePaths(object)))
+            msg <- c(msg, 
+                     "length(fileIndices(object)) != length(filePaths(object))")
+        if (is.null(msg)) TRUE else msg
+    }
+)
+
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### Constructors. 
+###
+
+setMethod(BamFileViews, "BamFileList", 
+          function(filePaths,
+                   fileIndices=character(),
                    fileSamples=DataFrame(row.names=
-                     make.unique(basename(filePaths))),
-                   fileRanges,
+                     make.unique(basename(path(filePaths)))),
+                   fileRanges=GRanges(),
                    fileExperiment=list(),
+                   byFile=TRUE,
                    yieldSize=NA_integer_,
                    .views_on_file=new.env(parent=emptyenv()), ...)
 {
-    new("BamFileViews", ..., filePaths=filePaths, fileIndices=fileIndices,
+    new("BamFileViews", ..., 
+        fileList=.FileList(
+            listData=(list(path=path(filePaths), index=index(filePaths)))),
         fileSamples=fileSamples, fileRanges=fileRanges,
-        fileExperiment=fileExperiment, yieldSize=yieldSize,
-        .views_on_file=.views_on_file)
+        fileExperiment=fileExperiment, byFile=byFile,
+        yieldSize=yieldSize, .views_on_file=.views_on_file)
 })
 
-setMethod(BamFileViews, c(fileRanges="missing"), 
-          function(filePaths=character(0),
+setMethod(BamFileViews, "character", 
+          function(filePaths,
                    fileIndices=filePaths,
                    fileSamples=DataFrame(row.names=
                      make.unique(basename(filePaths))),
-                   fileRanges,
+                   fileRanges=GRanges(),
                    fileExperiment=list(),
+                   byFile=TRUE,
                    yieldSize=NA_integer_,
-                   .views_on_file=new.env(parent=emptyenv()), 
-                   ..., auto.range=FALSE)
+                   .views_on_file=new.env(parent=emptyenv()), ...)
 {
-    if (length(filePaths) != 0L && auto.range)
-    {
-        ## Guess ranges from BAM file headers
-        pathsOk <- sapply(filePaths, function(fl) {
-            file.exists(fl) && !file.info(fl)$isdir
-        })
-        if (all(pathsOk)) {
-            rngs <- lapply(scanBamHeader(filePaths), "[[", "targets")
-            nms <- unique(unlist(lapply(rngs, names), use.names=FALSE))
-            ends <- sapply(nms, function(nm, rngs) {
-                idx <- sapply(rngs, function(rng, nm) {
-                    nm %in% names(rng)
-                }, nm)
-                if (sum(idx) > 0)
-                    max(sapply(rngs[idx], "[[", nm))
-                else
-                    stop("Rsamtools internal: could not determine fileRanges")
-            }, rngs)
-            fileRanges <- GRanges(names(ends), IRanges(1L, ends))
-        } else {
-            warning("some files do not exist; fileRanges not defined")
-            fileRanges <- GRanges()
-        }
-    } else {
-        fileRanges <- GRanges()
-    }
-    BamFileViews(filePaths=filePaths, fileIndices=fileIndices, 
-                 fileSamples=fileSamples, fileRanges=fileRanges, 
-                 fileExperiment=fileExperiment, yieldSize=yieldSize,
-                 .views_on_file=.views_on_file, ...)
+    new("BamFileViews", ..., 
+        fileList=.FileList(
+            listData=(list(path=filePaths, index=filePaths))),
+        fileSamples=fileSamples, fileRanges=fileRanges,
+        fileExperiment=fileExperiment, byFile=byFile,
+        yieldSize=yieldSize, .views_on_file=.views_on_file)
 })
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -69,24 +66,21 @@ setMethod(scanBam, "BamFileViews",
           function(file, index=file, ...,
                    param=ScanBamParam(what=scanBamWhat()))
 {
-    if (!missing(index))
-        warning("using fileIndices(file) for 'index'")
-    bamWhich(param) <- .FileViews_which(file, param, missing(param))
-    fun <- function(fileViews, ..., verbose)
-        scanBam(file=filePaths(fileViews),
-                index=fileIndices(fileViews), ...)
-    .FileViews_delegate("scanBam", file, fun, ..., param=param)
+    if (length(param))
+        if (!identical(fileRanges(file), bamWhich(param)))
+            warning("'fileRanges(file)' and 'bamWhich(param)' differ; ",
+                    "using fileRanges(file)")
+    bamWhich(param) <- fileRanges(file) 
+    fun <- function(file, ..., verbose)
+        scanBam(file=file[1], index=file[2], ...)
+    .delegate("scanBam", fun, file, ..., param=param)
 })
 
 setMethod(countBam, "BamFileViews",
           function(file, index=file, ..., param=ScanBamParam())
 {
-    if (!missing(index))
-        warning("using fileIndices(file) for 'index'")
-    bamWhich(param) <- .FileViews_which(file, param, missing(param))
-    fun <- function(fileViews, ..., verbose)
-        countBam(file=filePaths(fileViews),
-                 index=fileIndices(fileViews), ...)
-    .FileViews_delegate("countBam", file, fun, ..., param=param)
+    fun <- function(file, ..., verbose)
+        countBam(file=file[1], index=file[2], ...)
+    .delegate("countBam", fun, file, ..., param=param)
 })
 
