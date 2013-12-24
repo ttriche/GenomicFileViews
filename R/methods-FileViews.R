@@ -12,7 +12,7 @@ setMethod(.validity, "FileViews",
         msg <- NULL
         if (length(filePaths(object)) != nrow(fileSamples(object)))
             msg <- c(msg,
-                     "length(filePaths(object)) != nrow(fileSamples(object))")
+            "length(filePaths(object)) != nrow(fileSamples(object))")
         if (!byFile(object) && !length(fileRanges(object)))
             msg <- c(msg,
             "if byFile(object)=FALSE fileRanges(object) must be present")
@@ -178,8 +178,10 @@ delegateByFile <-
     function(what, fun, fileViews, ...)
 {
     ## List of path/index pairs
+    flist <- fileList(fileViews)
+    index <- sapply(flist, function(i) length(i) > 0L)
     pairs <- lapply(seq_along(filePaths(fileViews)), 
-                    function(i) sapply(fileList(fileViews), "[[", i)) 
+                    function(i) sapply(flist[index], "[[", i)) 
 
     result <- bplapply(pairs, fun, ...)
     if (length(result) != length(filePaths(fileViews))) {

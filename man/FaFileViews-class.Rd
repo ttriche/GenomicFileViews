@@ -8,14 +8,14 @@
 \alias{FaFileViews,FaFileList-method}
 
 % Methods:
-\alias{scanBam,FaFileViews-method}
-\alias{countBam,FaFileViews-method}
+\alias{scanFa,FaFileViews-method}
+\alias{countFa,FaFileViews-method}
 
-\title{Views into a set of BAM files}
+\title{Views into a set of Fasta files}
 
 \description{
-  Use \code{FaFileViews()} to reference a set of disk-based BAM files to be
-  processed (e.g., queried using \code{\link{scanBam}}) as a single
+  Use \code{FaFileViews()} to reference a set of disk-based Fasta files to be
+  processed (e.g., queried using \code{\link{scanFa}}) as a single
   \sQuote{experiment}.
 }
 
@@ -61,18 +61,16 @@
 
   \describe{
     \item{}{
-       \code{scanFa(file, param = ScanBamParam(what=scanBamWhat()))}:
+       \code{scanFa(file, param, ...)}:
        Visit each path in \code{filePaths(file)}, returning
-       the result of \code{scanBam} applied to the specified
-       path. \code{fileRanges(file)} takes precedence over
-       \code{bamWhich(param)}.
+       the result of \code{scanFa} applied to the specified
+       path.
     }
     \item{}{
        \code{countFa(file, ...)}:
        Visit each path in \code{filePaths(file)}, returning
-       the result of \code{countBam} applied to the specified
-       path. \code{fileRanges(file)} takes precedence over
-       \code{bamWhich(param)}.
+       the result of \code{countFa} applied to the specified
+       path.
     }
   }
 }
@@ -81,12 +79,12 @@
   \describe{
     \item{}{
        \code{filePaths}:
-         A character() vector of BAM path names or a \code{\linkS4class{FaFileList}}.
+         A character() vector of Fasta path names or a \code{\linkS4class{FaFileList}}.
     }
     \item{}{
       \code{fileIndices}:
-        A character() vector of BAM index file path names, \emph{without} the 
-        \sQuote{.bai} extension.
+        A character() vector of Fasta index file path names, \emph{without} the 
+        \sQuote{.fai} extension.
     }
     \item{}{
       \code{fileSamples}:
@@ -97,8 +95,8 @@
     \item{}{
       \code{fileRanges}:
         A \code{\linkS4class{GRanges}}, or missing instance with ranges defined 
-        on the spaces of the BAM files. Ranges are \emph{not} validated against 
-        the BAM files.
+        on the spaces of the Fasta files. Ranges are \emph{not} validated against 
+        the Fasta files.
     }
     \item{}{
       \code{fileExperiment}:

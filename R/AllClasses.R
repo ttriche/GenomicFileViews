@@ -14,7 +14,7 @@ setClass("FileViews",
         yieldSize="integer",
         .views_on_file="environment"),
     prototype(
-        delegateByFile=TRUE,
+        byFile=TRUE,
         yieldSize=NA_integer_),
     validity=.validity)
 
