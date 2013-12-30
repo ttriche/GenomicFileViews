@@ -1,12 +1,12 @@
 Package: GenomicFileViews
 Title: Genomic file views 
 Description:  Query genomic views across multiple files 
-Version: 0.99.3
+Version: 0.99.4
 Author: The Bioconductor Dev Team
 Maintainer: Bioconductor Package Maintainer <maintainer@bioconductor.org>
 biocViews: Infrastructure
 Depends: methods, BiocGenerics, BiocParallel, 
-         XVector, IRanges, GenomicRanges
-Imports: Rsamtools 
+         XVector, IRanges, GenomicRanges, rtracklayer
+Imports: Rsamtools
 Suggests: RUnit
 License: Artistic-2.0

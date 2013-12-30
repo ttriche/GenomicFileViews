@@ -139,9 +139,9 @@ setMethod("[", c("FileViews", "missing", "ANY"),
     if (any(is.na(j)))
         stop("subscript 'j' out of bounds")
     initialize(x, 
-        fileList=list(filePaths=filePaths(x)[j],
-                      fileIndices=fileIndices(x)[j]),
-        fileSamples=fileSamples(x)[j,,drop=FALSE])
+               fileList=.FileList(listData=list(path=filePaths(x)[j],
+                                    index=fileIndices(x)[j])),
+               fileSamples=fileSamples(x)[j,,drop=FALSE])
 })
 
 setMethod("[", c("FileViews", "ANY", "ANY"),
@@ -157,8 +157,8 @@ setMethod("[", c("FileViews", "ANY", "ANY"),
         stop("subscript 'j' out of bounds")
     initialize(x, 
         fileRanges=fileRanges(x)[i,],
-        fileList=list(filePaths=filePaths(x)[j],
-                      fileIndices=fileIndices(x)[j]),
+        fileList=.FileList(listData=list(path=filePaths(x)[j],
+                             index=fileIndices(x)[j])),
         fileSamples=fileSamples(x)[j,,drop=FALSE])
 })
 
@@ -171,7 +171,7 @@ setMethod("[", c("FileViews", "ANY", "ANY"),
     if (byFile(fileViews))
         delegateByFile(what, fun, fileViews, ...)
     else
-        delegateByViews(what, fun, fileViews, ...)
+        delegateByRange(what, fun, fileViews, ...)
 }
 
 delegateByFile <-
@@ -199,7 +199,33 @@ delegateByFile <-
 delegateByRange <-
     function(what, fun, fileViews, ...)
 {
-   ## TBD
+  ## I wrote it here one by one, however delegateByRange should allow n ranges at a time
+  ## this requires an argument or slot from somewhere above specifying this number n
+  
+  rangeIndex <- seq_along(fileRanges(fileViews))
+  result <- bplapply(rangeIndex, function(ri) {
+
+    ## Subset by ranges
+    subsetFileViews <- fileViews[ri,]
+    
+    ## List of path/index pairs
+    flist <- fileList(subsetFileViews)
+    index <- sapply(flist, function(i) length(i) > 0L)
+    pairs <- lapply(seq_along(filePaths(subsetFileViews)), 
+                    function(i) sapply(flist[index], "[[", i))   
+    
+    rangeResult <- lapply(pairs, fun, ...)
+    if (length(rangeResult) != length(filePaths(subsetFileViews))) {
+        stop(sprintf("'%s' failed on '%s'", what,
+                     paste(setdiff(rownames(fileSamples(subsetFileViews)), 
+                           names(rangeResult)), collapse="' '")))
+    }
+    names(rangeResult) <- rownames(fileSamples(subsetFileViews))
+    rangeResult
+  })
+  do.call(new, list("SimpleList", listData=result,
+                    metadata=list(samples=fileSamples(fileViews),
+                      experiment=fileExperiment(fileViews))))
 }
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

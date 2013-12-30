@@ -26,4 +26,6 @@ setClass("TabixFileViews", contains="FileViews")
 
 setClass("VcfFileViews", contains="FileViews")
 
+setClass("BigWigFileViews", contains="FileViews")
+
 .FileList <- setClass(".FileList", contains="SimpleList")

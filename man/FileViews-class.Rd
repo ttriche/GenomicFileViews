@@ -95,7 +95,7 @@
     }
     \item{}{
       \code{.views_on_file}:
-        An enviornment. Under construction / future use.
+        An environment. Under construction / future use.
     }
   }
 }

@@ -4,6 +4,7 @@ import(XVector)
 import(IRanges)
 import(BiocParallel)
 import(GenomicRanges)
+importFrom(rtracklayer, BigWigFile, import.bw, summary)
 
 ## Rsamtools
 importClassesFrom(Rsamtools, ScanBamParam, BamFile, BamFileList)
@@ -26,7 +27,7 @@ export(
 )
 
 exportClasses(
-    FileViews, BamFileViews, FaFileViews, TabixFileViews, VcfFileViews
+    FileViews, BamFileViews, FaFileViews, TabixFileViews, VcfFileViews, BigWigFileViews
 )
 
 exportMethods(
@@ -37,6 +38,9 @@ exportMethods(
     BamFileViews, scanBam, countBam, 
 
     ## from R/FaFileFiews:
-    FaFileViews, scanFa, countFa
+    FaFileViews, scanFa, countFa,
+
+    ## from R/BigWigFileViews:
+    BigWigFileViews, coverage, summary
 )
 

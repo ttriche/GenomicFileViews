@@ -49,3 +49,16 @@ setGeneric("VCFFileViews",
                    .views_on_file="environment", ...)
            standardGeneric("VCFFileViews"),
            signature="filePaths")
+
+setGeneric("BigWigFileViews",
+           function(filePaths,
+                    fileIndices=filePaths,
+                    fileSamples=DataFrame(row.names=
+                      make.unique(basename(filePaths))),
+                    fileRanges=GRanges(),
+                    fileExperiment=list(), 
+                    byFile=TRUE,
+                    yieldSize="NA_integer_",
+                   .views_on_file="environment", ...)
+           standardGeneric("BigWigFileViews"),
+           signature="filePaths")
