@@ -52,26 +52,25 @@ setMethod(coverage, "BigWigFileViews",
               # Rle for each GRange in fileRanges(x)
               # BUT: these have lost their GRange info, they only
               # have the name of the sequence
-              import.bw(BigWigFile(file[1]), asRle=TRUE, which=which)[which]
+              import.bw(BigWigFile(file[1]), asRle=TRUE, which=which, ...)[which]
             }
             .delegate("coverage", fun, x, ..., which=fileRanges(x))
           })
 
-# TODO: this is just testing code, take the first range only
+# still problems when a single range causes failure of summary()
 setMethod(summary, "BigWigFileViews",
           function(object, ...)
           {
-            fun <- function(file, ..., verbose) {
-              z <- try(summary(BigWigFile(file[1]), ...),
-                       silent=TRUE)
-              if (inherits(z,"try-error")) {
-                return(0) 
+            fun <- function(file, ..., which, verbose) {
+              summaryTry <- try(summary(BigWigFile(file[1]), which=which, ...),
+                                silent=TRUE)
+              if (inherits(summaryTry,"try-error")) {
+                return(rep(0,length(which))) 
               } else {
-                # TODO: this is just testing code, take the first range only
-                return(as.numeric(z[[1]]))
+                return(sapply(summaryTry, as.numeric))
               }
             }
-            .delegate("summary", fun, object, ..., ranges=fileRanges(object))
+            .delegate("summary", fun, object, ..., which=fileRanges(object))
           })
 
 

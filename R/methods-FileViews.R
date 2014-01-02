@@ -197,30 +197,27 @@ delegateByFile <-
 }
 
 delegateByRange <-
-    function(what, fun, fileViews, ...)
+    function(what, fun, fileViews, which, ...)
 {
-  ## I wrote it here one by one, however delegateByRange should allow n ranges at a time
+  ## I wrote it here one by one, however delegateByRange could/should allow n ranges at a time
   ## this requires an argument or slot from somewhere above specifying this number n
   
   rangeIndex <- seq_along(fileRanges(fileViews))
-  result <- bplapply(rangeIndex, function(ri) {
-
-    ## Subset by ranges
-    subsetFileViews <- fileViews[ri,]
-    
+  result <- bplapply(rangeIndex, function(ri) {    
     ## List of path/index pairs
-    flist <- fileList(subsetFileViews)
+    flist <- fileList(fileViews)
     index <- sapply(flist, function(i) length(i) > 0L)
-    pairs <- lapply(seq_along(filePaths(subsetFileViews)), 
+    pairs <- lapply(seq_along(filePaths(fileViews)), 
                     function(i) sapply(flist[index], "[[", i))   
-    
-    rangeResult <- lapply(pairs, fun, ...)
-    if (length(rangeResult) != length(filePaths(subsetFileViews))) {
+
+    # note here: subset the incoming 'which'
+    rangeResult <- lapply(pairs, fun, which=which[ri,], ...)
+    if (length(rangeResult) != length(filePaths(fileViews))) {
         stop(sprintf("'%s' failed on '%s'", what,
-                     paste(setdiff(rownames(fileSamples(subsetFileViews)), 
+                     paste(setdiff(rownames(fileSamples(fileViews)), 
                            names(rangeResult)), collapse="' '")))
     }
-    names(rangeResult) <- rownames(fileSamples(subsetFileViews))
+    names(rangeResult) <- rownames(fileSamples(fileViews))
     rangeResult
   })
   do.call(new, list("SimpleList", listData=result,
